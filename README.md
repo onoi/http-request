@@ -7,7 +7,7 @@
 [![Packagist download count](https://poser.pugx.org/onoi/http-request/d/total.png)](https://packagist.org/packages/onoi/http-request)
 [![Dependency Status](https://www.versioneye.com/php/onoi:http-request/badge.png)](https://www.versioneye.com/php/onoi:http-request)
 
-A minimalistic http request interface that was part of the [Semantic MediaWiki][smw] code base and
+A minimalistic http/curl request interface that was part of the [Semantic MediaWiki][smw] code base and
 is now being deployed as independent library.
 
 This library provides:
@@ -24,8 +24,8 @@ This library provides:
 
 ## Installation
 
-The recommended installation method for this library is by either adding
-the dependency to your [composer.json][composer].
+The recommended installation method for this library is by adding the
+dependency to your [composer.json][composer].
 
 ```json
 {
@@ -34,7 +34,6 @@ the dependency to your [composer.json][composer].
 	}
 }
 ```
-or to execute `composer require onoi/http-request:~1.0`.
 
 ## Usage
 
