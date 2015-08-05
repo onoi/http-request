@@ -7,6 +7,8 @@ matrix:
     - env: TYPE=UNIT;
       php: 5.4
     - env: TYPE=UNIT;
+      php: 5.3
+    - env: TYPE=UNIT;
       php: hhvm
 
 script:
