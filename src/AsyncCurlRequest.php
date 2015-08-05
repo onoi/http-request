@@ -25,7 +25,7 @@ class AsyncCurlRequest implements HttpRequest {
 	protected $options = array();
 
 	/**
-	 * @var array
+	 * @var HttpRequest[]
 	 */
 	private $httpRequests = array();
 
