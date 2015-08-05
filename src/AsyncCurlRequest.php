@@ -3,7 +3,6 @@
 namespace Onoi\HttpRequest;
 
 use InvalidArgumentException;
-use RuntimeException;
 use Closure;
 
 /**
