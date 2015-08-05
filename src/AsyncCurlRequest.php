@@ -24,7 +24,7 @@ class AsyncCurlRequest implements HttpRequest {
 	protected $options = array();
 
 	/**
-	 * @var HttpRequest[]
+	 * @var CurlRequest[]
 	 */
 	private $httpRequests = array();
 
@@ -75,9 +75,9 @@ class AsyncCurlRequest implements HttpRequest {
 	/**
 	 * @since 1.0
 	 *
-	 * @return boolean
+	 * @param CurlRequest $httpRequest
 	 */
-	public function addHttpRequest( HttpRequest $httpRequest ) {
+	public function addHttpRequest( CurlRequest $httpRequest ) {
 		$this->httpRequests[] = $httpRequest;
 	}
 
