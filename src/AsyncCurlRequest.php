@@ -24,7 +24,7 @@ class AsyncCurlRequest implements HttpRequest {
 	protected $options = array();
 
 	/**
-	 * @var array
+	 * @var HttpRequest[]
 	 */
 	private $httpRequests = array();
 
@@ -230,6 +230,13 @@ class AsyncCurlRequest implements HttpRequest {
 	 */
 	public function __destruct() {
 		curl_multi_close( $this->handle );
+	}
+
+	/**
+	 * @since 1.0
+	 */
+	public function __invoke() {
+		return $this->execute();
 	}
 
 }
