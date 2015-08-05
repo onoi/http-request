@@ -52,9 +52,9 @@ class AsyncCurlRequestTest extends \PHPUnit_Framework_TestCase {
 
 		$instance = new AsyncCurlRequest( curl_multi_init() );
 
-		$httpRequest = $this->getMockBuilder( '\Onoi\HttpRequest\HttpRequest' )
+		$httpRequest = $this->getMockBuilder( '\Onoi\HttpRequest\CurlRequest' )
 			->disableOriginalConstructor()
-			->getMockForAbstractClass();
+			->getMock();
 
 		$httpRequest->expects( $this->once() )
 			->method( 'ping' )
