@@ -233,4 +233,11 @@ class AsyncCurlRequest implements HttpRequest {
 		curl_multi_close( $this->handle );
 	}
 
+	/**
+	 * @since 1.0
+	 */
+	public function __invoke() {
+		return $this->execute();
+	}
+
 }

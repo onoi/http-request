@@ -60,4 +60,9 @@ interface HttpRequest {
 	 */
 	public function execute();
 
+	/**
+	 * @since 1.0
+	 */
+	public function __invoke();
+
 }
