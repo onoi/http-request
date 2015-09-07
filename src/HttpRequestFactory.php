@@ -65,10 +65,10 @@ class HttpRequestFactory {
 	/**
 	 * @since 1.0
 	 *
-	 * @return AsyncCurlRequest
+	 * @return MultiCurlRequest
 	 */
-	public function newAsyncCurlRequest() {
-		return new AsyncCurlRequest( curl_multi_init() );
+	public function newMultiCurlRequest() {
+		return new MultiCurlRequest( curl_multi_init() );
 	}
 
 }

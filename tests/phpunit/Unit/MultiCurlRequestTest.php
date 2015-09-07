@@ -2,11 +2,11 @@
 
 namespace Onoi\HttpRequest\Tests;
 
-use Onoi\HttpRequest\AsyncCurlRequest;
+use Onoi\HttpRequest\MultiCurlRequest;
 use Onoi\HttpRequest\CurlRequest;
 
 /**
- * @covers \Onoi\HttpRequest\AsyncCurlRequest
+ * @covers \Onoi\HttpRequest\MultiCurlRequest
  * @group onoi-http-request
  *
  * @license GNU GPL v2+
@@ -14,11 +14,11 @@ use Onoi\HttpRequest\CurlRequest;
  *
  * @author mwjames
  */
-class AsyncCurlRequestTest extends \PHPUnit_Framework_TestCase {
+class MultiCurlRequestTest extends \PHPUnit_Framework_TestCase {
 
 	public function testCanConstruct() {
 
-		$instance = new AsyncCurlRequest( curl_multi_init() );
+		$instance = new MultiCurlRequest( curl_multi_init() );
 
 		$this->assertInstanceOf(
 			'\Onoi\HttpRequest\HttpRequest',
@@ -26,19 +26,19 @@ class AsyncCurlRequestTest extends \PHPUnit_Framework_TestCase {
 		);
 
 		$this->assertInstanceOf(
-			'\Onoi\HttpRequest\AsyncCurlRequest',
+			'\Onoi\HttpRequest\MultiCurlRequest',
 			$instance
 		);
 	}
 
 	public function testWrongResourceTypeThrowsException() {
 		$this->setExpectedException( 'InvalidArgumentException' );
-		new AsyncCurlRequest( curl_init() );
+		new MultiCurlRequest( curl_init() );
 	}
 
 	public function testPingForEmptyHttpRequest() {
 
-		$instance = new AsyncCurlRequest( curl_multi_init() );
+		$instance = new MultiCurlRequest( curl_multi_init() );
 
 		$this->assertFalse(
 			$instance->ping()
@@ -50,7 +50,7 @@ class AsyncCurlRequestTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testPingConnectionState( $connectionState ) {
 
-		$instance = new AsyncCurlRequest( curl_multi_init() );
+		$instance = new MultiCurlRequest( curl_multi_init() );
 
 		$httpRequest = $this->getMockBuilder( '\Onoi\HttpRequest\CurlRequest' )
 			->disableOriginalConstructor()
@@ -77,7 +77,7 @@ class AsyncCurlRequestTest extends \PHPUnit_Framework_TestCase {
 			$this->markTestSkipped( "Option is not supported for current PHP version" );
 		}
 
-		$instance = new AsyncCurlRequest( curl_multi_init() );
+		$instance = new MultiCurlRequest( curl_multi_init() );
 
 		$instance->setOption(
 			CURLMOPT_MAXCONNECTS,
@@ -92,7 +92,7 @@ class AsyncCurlRequestTest extends \PHPUnit_Framework_TestCase {
 
 	public function testExecuteForResponse() {
 
-		$instance = new AsyncCurlRequest( curl_multi_init() );
+		$instance = new MultiCurlRequest( curl_multi_init() );
 
 		$instance->addHttpRequest(
 			new CurlRequest( curl_init() )
@@ -123,7 +123,7 @@ class AsyncCurlRequestTest extends \PHPUnit_Framework_TestCase {
 		$asyncCallbackResponseMock->expects( $this->once() )
 			->method( 'run' );
 
-		$instance = new AsyncCurlRequest( curl_multi_init() );
+		$instance = new MultiCurlRequest( curl_multi_init() );
 
 		$instance->addHttpRequest(
 			new CurlRequest( curl_init() )

@@ -15,7 +15,7 @@ This library provides:
 - `HttpRequest` interface
 - `CurlRequest` as cURL implementation of the `HttpRequest`
 - `CachedCurlRequest` extends `CurlRequest` to support low-level caching on repeated requests
-- `AsyncCurlRequest` to make use of the cURL multi stack feature
+- `MultiCurlRequest` to make use of the cURL multi stack feature
 
 ## Requirements
 
@@ -111,6 +111,9 @@ developers mailing list and have a look at the [contribution guidelinee](/CONTRI
 The library provides unit tests that covers the core-functionality normally run by the [continues integration platform][travis]. Tests can also be executed manually using the PHPUnit configuration file found in the root directory.
 
 ### Release notes
+
+* 1.1.0 (2015-09-10)
+ - Renamed `AsyncCurlRequest` to `MultiCurlRequest`
 
 * 1.0.0 initial release (2015-07-22)
 

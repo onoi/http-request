@@ -49,17 +49,17 @@ class AsyncRequestToPhpHttpdTest extends \PHPUnit_Framework_TestCase {
 		$expectedToCount = 5;
 
 		$httpRequestFactory = new HttpRequestFactory();
-		$asyncCurlRequest = $httpRequestFactory->newAsyncCurlRequest();
+		$multiCurlRequest = $httpRequestFactory->newMultiCurlRequest();
 
 		for ( $i = 0; $i < $expectedToCount; $i++ ) {
-			$asyncCurlRequest->addHttpRequest(
+			$multiCurlRequest->addHttpRequest(
 				$httpRequestFactory->newCurlRequest( $this->getHttpdRequestUrl( $i ) )
 			);
 		}
 
 		$this->assertCount(
 			$expectedToCount,
-			$asyncCurlRequest->execute()
+			$multiCurlRequest->execute()
 		);
 	}
 
@@ -74,17 +74,17 @@ class AsyncRequestToPhpHttpdTest extends \PHPUnit_Framework_TestCase {
 			$cacheFactory->newFixedInMemoryLruCache()
 		);
 
-		$asyncCurlRequest = $httpRequestFactory->newAsyncCurlRequest();
+		$multiCurlRequest = $httpRequestFactory->newMultiCurlRequest();
 
 		for ( $i = 0; $i < $expectedToCount; $i++ ) {
-			$asyncCurlRequest->addHttpRequest(
+			$multiCurlRequest->addHttpRequest(
 				$httpRequestFactory->newCachedCurlRequest( $this->getHttpdRequestUrl( $i ) )
 			);
 		}
 
 		$this->assertCount(
 			$expectedToCount,
-			$asyncCurlRequest->execute()
+			$multiCurlRequest->execute()
 		);
 	}
 
@@ -101,19 +101,19 @@ class AsyncRequestToPhpHttpdTest extends \PHPUnit_Framework_TestCase {
 			->method( 'run' );
 
 		$httpRequestFactory = new HttpRequestFactory();
-		$asyncCurlRequest = $httpRequestFactory->newAsyncCurlRequest();
+		$multiCurlRequest = $httpRequestFactory->newMultiCurlRequest();
 
-		$asyncCurlRequest->setCallback( function( $data, $info ) use ( $asyncCallbackResponseMock ) {
+		$multiCurlRequest->setCallback( function( $data, $info ) use ( $asyncCallbackResponseMock ) {
 			$asyncCallbackResponseMock->run( $data, $info );
 		} );
 
 		for ( $i = 0; $i < $expectedToCount; $i++ ) {
-			$asyncCurlRequest->addHttpRequest(
+			$multiCurlRequest->addHttpRequest(
 				$httpRequestFactory->newCurlRequest( $this->getHttpdRequestUrl( $i ) )
 			);
 		}
 
-		$asyncCurlRequest->execute();
+		$multiCurlRequest->execute();
 	}
 
 	private function getHttpdRequestUrl( $id ) {
@@ -141,9 +141,7 @@ class AsyncRequestToPhpHttpdTest extends \PHPUnit_Framework_TestCase {
 
 	private function canConnectToHttpd() {
 
-		set_error_handler( function() { return true; } );
-		$sp = fsockopen( WEB_SERVER_HOST, WEB_SERVER_PORT );
-		restore_error_handler();
+		$sp = @fsockopen( WEB_SERVER_HOST, WEB_SERVER_PORT );
 
 		if ( $sp === false ) {
 			return false;

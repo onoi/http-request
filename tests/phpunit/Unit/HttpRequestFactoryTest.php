@@ -59,13 +59,13 @@ class HttpRequestFactoryTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
-	public function testCanConstructAsyncCurlRequest() {
+	public function testCanConstructMultiCurlRequest() {
 
 		$instance = new HttpRequestFactory();
 
 		$this->assertInstanceOf(
-			'\Onoi\HttpRequest\AsyncCurlRequest',
-			$instance->newAsyncCurlRequest()
+			'\Onoi\HttpRequest\MultiCurlRequest',
+			$instance->newMultiCurlRequest()
 		);
 	}
 

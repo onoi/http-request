@@ -11,7 +11,7 @@ use Closure;
  *
  * @author mwjames
  */
-class AsyncCurlRequest implements HttpRequest {
+class MultiCurlRequest implements HttpRequest {
 
 	/**
 	 * @var resource
