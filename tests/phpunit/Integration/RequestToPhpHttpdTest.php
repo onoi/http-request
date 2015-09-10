@@ -103,8 +103,8 @@ class RequestToPhpHttpdTest extends \PHPUnit_Framework_TestCase {
 		$httpRequestFactory = new HttpRequestFactory();
 		$multiCurlRequest = $httpRequestFactory->newMultiCurlRequest();
 
-		$multiCurlRequest->setCallback( function( $data, $info ) use ( $asyncCallbackResponseMock ) {
-			$asyncCallbackResponseMock->run( $data, $info );
+		$multiCurlRequest->setOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK, function( $requestResponse ) use ( $asyncCallbackResponseMock ) {
+			$asyncCallbackResponseMock->run( $requestResponse );
 		} );
 
 		for ( $i = 0; $i < $expectedToCount; $i++ ) {

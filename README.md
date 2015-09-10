@@ -115,6 +115,7 @@ The library provides unit tests that covers the core-functionality normally run 
 
 * 1.1.0 (2015-09-10)
  - Renamed `AsyncCurlRequest` to `MultiCurlRequest`
+ - Deprecated `MultiCurlRequest::setCallback` and replaced by `MultiCurlRequest::setOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK, ... )`
  - Added `AsyncRequest` to create asynchronous socket connections
 
 * 1.0.0 (2015-07-22, initial release)

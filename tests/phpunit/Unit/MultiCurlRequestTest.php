@@ -114,14 +114,7 @@ class MultiCurlRequestTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
-	public function testExecuteForCallbackResponse() {
-
-		$asyncCallbackResponseMock = $this->getMockBuilder( '\stdClass' )
-			->setMethods( array( 'run' ) )
-			->getMock();
-
-		$asyncCallbackResponseMock->expects( $this->once() )
-			->method( 'run' );
+	public function testDeprecatedSetCallback() {
 
 		$instance = new MultiCurlRequest( curl_multi_init() );
 
@@ -129,18 +122,56 @@ class MultiCurlRequestTest extends \PHPUnit_Framework_TestCase {
 			new CurlRequest( curl_init() )
 		);
 
-		$instance->setCallback( function( $data, $info ) use ( $asyncCallbackResponseMock ) {
-			$asyncCallbackResponseMock->run( $data, $info );
+		$requestResponse = null;
+
+		$instance->setCallback( function( $requestResponseCompleted ) use ( &$requestResponse ) {
+			$requestResponse = $requestResponseCompleted;
 		} );
 
-		$this->assertNull(
-			$instance->execute()
+		$instance->execute();
+
+		$this->assertRequestResponse( $requestResponse );
+	}
+
+	public function testOnCompletedCallback() {
+
+		$instance = new MultiCurlRequest( curl_multi_init() );
+
+		$instance->addHttpRequest(
+			new CurlRequest( curl_init() )
 		);
+
+		$requestResponse = null;
+
+		$instance->setOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK, function( $requestResponseCompleted ) use ( &$requestResponse ) {
+			$requestResponse = $requestResponseCompleted;
+		} );
+
+		$instance->execute();
 
 		$this->assertSame(
 			0,
 			$instance->getLastErrorCode()
 		);
+
+		$this->assertRequestResponse( $requestResponse );
+	}
+
+	private function assertRequestResponse( $requestResponse ) {
+
+		$this->assertInstanceOf(
+			'\Onoi\HttpRequest\RequestResponse',
+			$requestResponse
+		);
+
+		$expectedRequestResponseFields = array(
+			'contents',
+			'info'
+		);
+
+		foreach ( $expectedRequestResponseFields as $field ) {
+			$this->assertTrue( $requestResponse->has( $field ) );
+		}
 	}
 
 	public function pingConnectionStateProvider() {

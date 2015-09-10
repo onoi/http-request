@@ -34,11 +34,6 @@ class MultiCurlRequest implements HttpRequest {
 	private $lastErrorCode = 0;
 
 	/**
-	 * @var Closure|null
-	 */
-	private $callback = null;
-
-	/**
 	 * @since 1.0
 	 *
 	 * @param resource $handle
@@ -83,11 +78,12 @@ class MultiCurlRequest implements HttpRequest {
 
 	/**
 	 * @since 1.0
+	 * @deprecated since 1.1, use ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK instead
 	 *
 	 * @param Closure $callback
 	 */
 	public function setCallback( Closure $callback ) {
-		$this->callback = $callback;
+		$this->setOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK, $callback );
 	}
 
 	/**
@@ -99,6 +95,11 @@ class MultiCurlRequest implements HttpRequest {
 	public function setOption( $name, $value ) {
 
 		$this->options[$name] = $value;
+
+		// InternaL ONOI options are not further relayed
+		if ( strpos( $name, 'ONOI_HTTP_REQUEST' ) !== false ) {
+			return;
+		}
 
 		curl_multi_setopt(
 			$this->handle,
@@ -166,16 +167,12 @@ class MultiCurlRequest implements HttpRequest {
 			curl_multi_add_handle( $this->handle, $httpRequest() );
 		}
 
-		$response = $this->doExecute( $handleExecutionCounter );
-
-		if ( $this->callback !== null ) {
-			return null;
-		}
+		$response = $this->doMakeMultiRequest( $handleExecutionCounter );
 
 		return $response;
 	}
 
-	private function doExecute( $handleExecutionCounter ) {
+	private function doMakeMultiRequest( $handleExecutionCounter ) {
 
 		$active = null;
 		$responses = array();
@@ -194,26 +191,10 @@ class MultiCurlRequest implements HttpRequest {
 
 		while ( ( $active && $this->lastErrorCode == CURLM_OK ) || $handleExecutionCounter !== array() ) {
 
-			$response = null;
+			$requestResponse = $this->doCheckRequestResponse( $handleExecutionCounter );
 
-			if ( ( $state = curl_multi_info_read( $this->handle ) ) && $state["msg"] == CURLMSG_DONE ) {
-
-				$response = array(
-					'contents' => curl_multi_getcontent( $state['handle'] ),
-					'info'     => curl_getinfo( $state['handle'] )
-				);
-
-				unset( $handleExecutionCounter[(int) $state['handle']] );
-				curl_multi_remove_handle( $this->handle, $state['handle'] );
-			}
-
-			if ( $this->callback !== null && $response !== null ) {
-				call_user_func_array( $this->callback, array(
-					$response['contents'],
-					$response['info']
-				) );
-			} elseif ( $response !== null ) {
-				$responses[] = $response;
+			if ( $requestResponse !== null ) {
+				$responses[] = $requestResponse;
 			}
 
 			// Continue to exec until curl is ready
@@ -223,6 +204,28 @@ class MultiCurlRequest implements HttpRequest {
 		}
 
 		return $responses;
+	}
+
+	private function doCheckRequestResponse( &$handleExecutionCounter ) {
+
+		$requestResponse = null;
+
+		if ( ( $state = curl_multi_info_read( $this->handle ) ) && $state["msg"] == CURLMSG_DONE ) {
+
+			$requestResponse = new RequestResponse( array(
+				'contents' => curl_multi_getcontent( $state['handle'] ),
+				'info'     => curl_getinfo( $state['handle'] )
+			) );
+
+			unset( $handleExecutionCounter[(int) $state['handle']] );
+			curl_multi_remove_handle( $this->handle, $state['handle'] );
+		}
+
+		if ( is_callable( $this->getOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK ) ) && $requestResponse !== null ) {
+			call_user_func_array( $this->getOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK ), array( $requestResponse ) );
+		}
+
+		return $requestResponse;
 	}
 
 	/**
