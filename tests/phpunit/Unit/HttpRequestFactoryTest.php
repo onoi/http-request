@@ -69,4 +69,14 @@ class HttpRequestFactoryTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
+	public function testCanConstructAsyncRequest() {
+
+		$instance = new HttpRequestFactory();
+
+		$this->assertInstanceOf(
+			'\Onoi\HttpRequest\AsyncRequest',
+			$instance->newAsyncRequest()
+		);
+	}
+
 }

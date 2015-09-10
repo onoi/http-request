@@ -71,4 +71,15 @@ class HttpRequestFactory {
 		return new MultiCurlRequest( curl_multi_init() );
 	}
 
+	/**
+	 * @since 1.1
+	 *
+	 * @param string|null $url
+	 *
+	 * @return AsyncRequest
+	 */
+	public function newAsyncRequest( $url = null ) {
+		return new AsyncRequest( $url );
+	}
+
 }
