@@ -14,7 +14,7 @@ use RuntimeException;
  *
  * @author mwjames
  */
-class AsyncRequestToPhpHttpdTest extends \PHPUnit_Framework_TestCase {
+class RequestToPhpHttpdTest extends \PHPUnit_Framework_TestCase {
 
 	private static $pid;
 
@@ -63,7 +63,7 @@ class AsyncRequestToPhpHttpdTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
-	public function testCachedQueuedResponse() {
+	public function testCachedMultiCurlQueuedResponse() {
 
 		$this->connectToHttpd();
 		$expectedToCount = 5;
@@ -88,7 +88,7 @@ class AsyncRequestToPhpHttpdTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
-	public function testAsyncCallbackResponse() {
+	public function testMultiCurlForCallbackResponse() {
 
 		$this->connectToHttpd();
 		$expectedToCount = 5;
@@ -114,6 +114,36 @@ class AsyncRequestToPhpHttpdTest extends \PHPUnit_Framework_TestCase {
 		}
 
 		$multiCurlRequest->execute();
+	}
+
+	public function testAsyncResponse() {
+
+		$this->connectToHttpd();
+		$expectedToCount = 1;
+
+		$asyncCallbackResponseMock = $this->getMockBuilder( '\stdClass' )
+			->setMethods( array( 'run' ) )
+			->getMock();
+
+		$asyncCallbackResponseMock->expects( $this->exactly( $expectedToCount ) )
+			->method( 'run' );
+
+		$httpRequestFactory = new HttpRequestFactory();
+		$asyncRequest = $httpRequestFactory->newAsyncRequest();
+
+		$asyncRequest->setOption( ONOI_HTTP_REQUEST_CONNECTION_TIMEOUT, 5 );
+		$asyncRequest->setOption( ONOI_HTTP_REQUEST_CONNECTION_FAILURE_REPEAT, 2 );
+
+		$asyncRequest->setOption( ONOI_HTTP_REQUEST_METHOD, 'GET' );
+		$asyncRequest->setOption( ONOI_HTTP_REQUEST_URL, WEB_SERVER_HOST . ':' .  WEB_SERVER_PORT . '/plain.php' );
+
+		$asyncRequest->ping();
+
+		$asyncRequest->setOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK, function( $requestResponse ) use ( $asyncCallbackResponseMock ) {
+			$asyncCallbackResponseMock->run( $requestResponse );
+		} );
+
+		$asyncRequest->execute();
 	}
 
 	private function getHttpdRequestUrl( $id ) {
