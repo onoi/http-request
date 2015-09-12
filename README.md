@@ -31,7 +31,7 @@ dependency to your [composer.json][composer].
 ```json
 {
 	"require": {
-		"onoi/http-request": "~1.0"
+		"onoi/http-request": "~1.1"
 	}
 }
 ```
@@ -39,39 +39,39 @@ dependency to your [composer.json][composer].
 ## Usage
 
 ```php
-use Onoi\HttpRequest\HttpRequest;
+use Onoi\HttpRequest\CurlRequest;
 use Onoi\HttpRequest\Exception\BadHttpResponseException;
 use Onoi\HttpRequest\Exception\HttpConnectionException;
 
 class Foo {
 
-	private $httpRequest = null;
+	private $curlRequest = null;
 
-	public function __constructor( HttpRequest $httpRequest ) {
-		$this->httpRequest = $httpRequest;
+	public function __constructor( CurlRequest $curlRequest ) {
+		$this->curlRequest = $curlRequest;
 	}
 
 	public function makeHttpRequestTo( $url ) {
 
-		$this->httpRequest->setOption( CURLOPT_URL, $url );
+		$this->curlRequest->setOption( CURLOPT_URL, $url );
 
-		if ( !$this->httpRequest->ping() ) {
+		if ( !$this->curlRequest->ping() ) {
 			throw new HttpConnectionException( "Couldn't connect" );
 		}
 
-		$this->httpRequest->setOption( CURLOPT_RETURNTRANSFER, true );
+		$this->curlRequest->setOption( CURLOPT_RETURNTRANSFER, true );
 
-		$this->httpRequest->setOption( CURLOPT_HTTPHEADER, array(
+		$this->curlRequest->setOption( CURLOPT_HTTPHEADER, array(
 			'Accept: application/x-turtle'
 		) );
 
-		$response = $this->httpRequest->execute();
+		$response = $this->curlRequest->execute();
 
-		if ( $this->httpRequest->getLastErrorCode() == 0 ) {
+		if ( $this->curlRequest->getLastErrorCode() == 0 ) {
 			return $response;
 		}
 
-		throw new BadHttpResponseException( $this->httpRequest );
+		throw new BadHttpResponseException( $this->curlRequest );
 	}
 }
 ```
@@ -92,10 +92,10 @@ $compositeCache = $cacheFactory->newCompositeCache( array(
 
 $httpRequestFactory = new HttpRequestFactory( $compositeCache );
 
-$cachedRequest = $httpRequestFactory->newCachedCurlRequest();
-$cachedRequest->setExpiryInSeconds( 60 * 60 );
+$cachedCurlRequest = $httpRequestFactory->newCachedCurlRequest();
+$cachedCurlRequest->setExpiryInSeconds( 60 * 60 );
 
-$instance = new Foo( $cachedRequest );
+$instance = new Foo( $cachedCurlRequest );
 $instance->makeHttpRequestTo( 'http://example.org' );
 ```
 
@@ -113,9 +113,9 @@ The library provides unit tests that covers the core-functionality normally run 
 
 ## Release notes
 
-* 1.1.0 (2015-09-10)
+* 1.1.0 (2015-09-12)
  - Renamed `AsyncCurlRequest` to `MultiCurlRequest`
- - Deprecated `MultiCurlRequest::setCallback` and replaced by `MultiCurlRequest::setOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK, ... )`
+ - Deprecated `MultiCurlRequest::setCallback` and to be replaced by `MultiCurlRequest::setOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK, ... )`
  - Added `SocketRequest` to create asynchronous socket connections
 
 * 1.0.0 (2015-07-22, initial release)
