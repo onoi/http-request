@@ -129,21 +129,21 @@ class RequestToPhpHttpdTest extends \PHPUnit_Framework_TestCase {
 			->method( 'run' );
 
 		$httpRequestFactory = new HttpRequestFactory();
-		$asyncRequest = $httpRequestFactory->newAsyncRequest();
+		$socketRequest = $httpRequestFactory->newSocketRequest();
 
-		$asyncRequest->setOption( ONOI_HTTP_REQUEST_CONNECTION_TIMEOUT, 5 );
-		$asyncRequest->setOption( ONOI_HTTP_REQUEST_CONNECTION_FAILURE_REPEAT, 2 );
+		$socketRequest->setOption( ONOI_HTTP_REQUEST_CONNECTION_TIMEOUT, 5 );
+		$socketRequest->setOption( ONOI_HTTP_REQUEST_CONNECTION_FAILURE_REPEAT, 2 );
 
-		$asyncRequest->setOption( ONOI_HTTP_REQUEST_METHOD, 'GET' );
-		$asyncRequest->setOption( ONOI_HTTP_REQUEST_URL, WEB_SERVER_HOST . ':' .  WEB_SERVER_PORT . '/plain.php' );
+		$socketRequest->setOption( ONOI_HTTP_REQUEST_METHOD, 'GET' );
+		$socketRequest->setOption( ONOI_HTTP_REQUEST_URL, WEB_SERVER_HOST . ':' .  WEB_SERVER_PORT . '/plain.php' );
 
-		$asyncRequest->ping();
+		$socketRequest->ping();
 
-		$asyncRequest->setOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK, function( $requestResponse ) use ( $asyncCallbackResponseMock ) {
+		$socketRequest->setOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK, function( $requestResponse ) use ( $asyncCallbackResponseMock ) {
 			$asyncCallbackResponseMock->run( $requestResponse );
 		} );
 
-		$asyncRequest->execute();
+		$socketRequest->execute();
 	}
 
 	private function getHttpdRequestUrl( $id ) {

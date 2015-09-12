@@ -2,10 +2,10 @@
 
 namespace Onoi\HttpRequest\Tests;
 
-use Onoi\HttpRequest\AsyncRequest;
+use Onoi\HttpRequest\SocketRequest;
 
 /**
- * @covers \Onoi\HttpRequest\AsyncRequest
+ * @covers \Onoi\HttpRequest\SocketRequest
  * @group onoi-http-request
  *
  * @license GNU GPL v2+
@@ -13,14 +13,14 @@ use Onoi\HttpRequest\AsyncRequest;
  *
  * @author mwjames
  */
-class AsyncRequestTest extends \PHPUnit_Framework_TestCase {
+class SocketRequestTest extends \PHPUnit_Framework_TestCase {
 
 	public function testCanConstruct() {
 
-		$instance = new AsyncRequest();
+		$instance = new SocketRequest();
 
 		$this->assertInstanceOf(
-			'\Onoi\HttpRequest\AsyncRequest',
+			'\Onoi\HttpRequest\SocketRequest',
 			$instance
 		);
 
@@ -32,7 +32,7 @@ class AsyncRequestTest extends \PHPUnit_Framework_TestCase {
 
 	public function testPing() {
 
-		$instance = new AsyncRequest();
+		$instance = new SocketRequest();
 
 		$this->assertFalse(
 			$instance->ping()
@@ -48,7 +48,7 @@ class AsyncRequestTest extends \PHPUnit_Framework_TestCase {
 
 	public function testExecute() {
 
-		$instance = new AsyncRequest();
+		$instance = new SocketRequest();
 		$instance->setOption( ONOI_HTTP_REQUEST_CONNECTION_TIMEOUT, 1 );
 		$instance->setOption( ONOI_HTTP_REQUEST_URL, 'http://localhost:8888' );
 
@@ -60,7 +60,7 @@ class AsyncRequestTest extends \PHPUnit_Framework_TestCase {
 
 	public function testGetLastError() {
 
-		$instance = new AsyncRequest();
+		$instance = new SocketRequest();
 		$instance->setOption( ONOI_HTTP_REQUEST_CONNECTION_TIMEOUT, 1 );
 
 		$instance->execute();
@@ -73,7 +73,7 @@ class AsyncRequestTest extends \PHPUnit_Framework_TestCase {
 
 	public function testGetLastErrorCode() {
 
-		$instance = new AsyncRequest();
+		$instance = new SocketRequest();
 
 		$this->assertInternalType(
 			'integer',
@@ -83,7 +83,7 @@ class AsyncRequestTest extends \PHPUnit_Framework_TestCase {
 
 	public function testGetLastTransferInfo() {
 
-		$instance = new AsyncRequest();
+		$instance = new SocketRequest();
 
 		$this->assertInternalType(
 			'string',
@@ -93,7 +93,7 @@ class AsyncRequestTest extends \PHPUnit_Framework_TestCase {
 
 	public function testCallbackOnRequestCompleted() {
 
-		$instance = new AsyncRequest();
+		$instance = new SocketRequest();
 		$instance->setOption( ONOI_HTTP_REQUEST_CONNECTION_TIMEOUT, 0.1 );
 
 		$requestResponse = null;
@@ -109,7 +109,7 @@ class AsyncRequestTest extends \PHPUnit_Framework_TestCase {
 
 	public function testTryInvalidCallbackOnRequestCompleted() {
 
-		$instance = new AsyncRequest();
+		$instance = new SocketRequest();
 
 		$instance->setOption( ONOI_HTTP_REQUEST_CONNECTION_TIMEOUT, 0.1 );
 		$instance->setOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK, 'foo' );
@@ -121,7 +121,7 @@ class AsyncRequestTest extends \PHPUnit_Framework_TestCase {
 
 	public function testCallbackOnRequestFailed() {
 
-		$instance = new AsyncRequest();
+		$instance = new SocketRequest();
 		$instance->setOption( ONOI_HTTP_REQUEST_CONNECTION_TIMEOUT, 0.1 );
 
 		$requestResponse = null;
@@ -162,7 +162,7 @@ class AsyncRequestTest extends \PHPUnit_Framework_TestCase {
 		$constants = array(
 			'ONOI_HTTP_REQUEST_ON_FAILED_CALLBACK',
 			'ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK',
-			'ONOI_HTTP_REQUEST_STREAM_CLIENT_FLAGS',
+			'ONOI_HTTP_REQUEST_SOCKET_CLIENT_FLAGS',
 			'ONOI_HTTP_REQUEST_URL',
 			'ONOI_HTTP_REQUEST_CONNECTION_TIMEOUT',
 			'ONOI_HTTP_REQUEST_CONNECTION_FAILURE_REPEAT',
@@ -173,7 +173,7 @@ class AsyncRequestTest extends \PHPUnit_Framework_TestCase {
 			'ONOI_HTTP_REQUEST_SSL_VERIFYPEER'
 		);
 
-		$instance = new AsyncRequest();
+		$instance = new SocketRequest();
 
 		foreach ( $constants as $constant ) {
 			$this->assertTrue( defined( $constant ) );

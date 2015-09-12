@@ -76,10 +76,10 @@ class HttpRequestFactory {
 	 *
 	 * @param string|null $url
 	 *
-	 * @return AsyncRequest
+	 * @return SocketRequest
 	 */
-	public function newAsyncRequest( $url = null ) {
-		return new AsyncRequest( $url );
+	public function newSocketRequest( $url = null ) {
+		return new SocketRequest( $url );
 	}
 
 }

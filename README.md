@@ -14,9 +14,9 @@ This library provides:
 
 - `HttpRequest` interface
 - `CurlRequest` as cURL implementation of the `HttpRequest`
-- `CachedCurlRequest` extends `CurlRequest` to support low-level caching on repeated requests
+- `CachedCurlRequest` to support low-level caching on repeated `CurlRequest` requests
 - `MultiCurlRequest` to make use of the cURL multi stack feature
-- `AsyncRequest` to create asynchronous socket connections
+- `SocketRequest` to create asynchronous socket connections
 
 ## Requirements
 
@@ -116,7 +116,7 @@ The library provides unit tests that covers the core-functionality normally run 
 * 1.1.0 (2015-09-10)
  - Renamed `AsyncCurlRequest` to `MultiCurlRequest`
  - Deprecated `MultiCurlRequest::setCallback` and replaced by `MultiCurlRequest::setOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK, ... )`
- - Added `AsyncRequest` to create asynchronous socket connections
+ - Added `SocketRequest` to create asynchronous socket connections
 
 * 1.0.0 (2015-07-22, initial release)
  - Added the `HttpRequest` interface

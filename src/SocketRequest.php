@@ -10,19 +10,15 @@ use Closure;
  * request.
  *
  * Once a connection is established and content has been posted, the request
- * is expected to close the connection. The receiving client is expected to open
- * a separate process and initiated a independent transaction from that of the
- * originating request.
- *
- * A callback can verify the acknowledge but not the transactional response
- * (as it would be for a cURL request).
+ * will close the connection. The receiving client is responsible for open
+ * a separate process and initiated a independent transaction.
  *
  * @license GNU GPL v2+
  * @since 1.1
  *
  * @author mwjames
  */
-class AsyncRequest implements HttpRequest {
+class SocketRequest implements HttpRequest {
 
 	/**
 	 * @var array
@@ -53,7 +49,7 @@ class AsyncRequest implements HttpRequest {
 		$this->setOption( ONOI_HTTP_REQUEST_URL, $url );
 		$this->setOption( ONOI_HTTP_REQUEST_CONNECTION_TIMEOUT, 15 );
 		$this->setOption( ONOI_HTTP_REQUEST_CONNECTION_FAILURE_REPEAT, 2 );
-		$this->setOption( ONOI_HTTP_REQUEST_STREAM_CLIENT_FLAGS, STREAM_CLIENT_ASYNC_CONNECT | STREAM_CLIENT_CONNECT );
+		$this->setOption( ONOI_HTTP_REQUEST_SOCKET_CLIENT_FLAGS, STREAM_CLIENT_ASYNC_CONNECT | STREAM_CLIENT_CONNECT );
 		$this->setOption( ONOI_HTTP_REQUEST_METHOD, 'POST' );
 		$this->setOption( ONOI_HTTP_REQUEST_CONTENT_TYPE, "application/x-www-form-urlencoded" );
 		$this->setOption( ONOI_HTTP_REQUEST_SSL_VERIFYPEER, false );
@@ -151,7 +147,7 @@ class AsyncRequest implements HttpRequest {
 
 		$resource = $this->getResourceFromSocketClient(
 			$urlComponents,
-			$this->getOption( ONOI_HTTP_REQUEST_STREAM_CLIENT_FLAGS )
+			$this->getOption( ONOI_HTTP_REQUEST_SOCKET_CLIENT_FLAGS )
 		);
 
 		// Defaults
