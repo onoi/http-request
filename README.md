@@ -21,7 +21,6 @@ This library provides:
 ## Requirements
 
 - PHP 5.3 or later
-- lib-curl
 
 ## Installation
 
