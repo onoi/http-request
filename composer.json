@@ -16,8 +16,10 @@
 	],
 	"require": {
 		"php": ">=5.3.2",
-		"lib-curl": "*",
 		"onoi/cache": "~1.2"
+	},
+	"suggest": {
+		"lib-curl": "Allows making CURL requests"	
 	},
 	"extra": {
 		"branch-alias": {
