@@ -91,10 +91,33 @@ class SocketRequestTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
-	public function testCallbackOnRequestCompleted() {
+	public function testCallbackOnRequestNotCompleted() {
 
 		$instance = new SocketRequest();
 		$instance->setOption( ONOI_HTTP_REQUEST_CONNECTION_TIMEOUT, 0.1 );
+
+		$requestResponse = null;
+
+		$instance->setOption( ONOI_HTTP_REQUEST_ON_FAILED_CALLBACK, function( $requestResponseFailed ) use ( &$requestResponse ) {
+			$requestResponse = $requestResponseFailed;
+		} );
+
+		$instance->execute();
+
+		$this->assertRequestResponse( $requestResponse );
+	}
+
+	public function testCallbackOnRequestCompleted() {
+
+		$url = 'http://localhost:8080/';
+
+		$instance = new SocketRequest( $url );
+		$instance->setOption( ONOI_HTTP_REQUEST_CONNECTION_TIMEOUT, 2 );
+		$instance->setOption( ONOI_HTTP_REQUEST_METHOD, 'HEAD' );
+
+		if ( !$instance->ping() ) {
+			$this->markTestSkipped( "Skip test because {$url} was not reachable" );
+		}
 
 		$requestResponse = null;
 
@@ -132,6 +155,23 @@ class SocketRequestTest extends \PHPUnit_Framework_TestCase {
 
 		$instance->execute();
 
+		$this->assertRequestResponse( $requestResponse );
+	}
+
+	public function testCallbackOnRequestNotAccepted() {
+
+		$instance = new SocketRequest();
+		$instance->setOption( ONOI_HTTP_REQUEST_CONNECTION_TIMEOUT, 2 );
+
+		$instance->ping();
+
+		$requestResponse = null;
+
+		$instance->setOption( ONOI_HTTP_REQUEST_ON_FAILED_CALLBACK, function( $requestResponseFailed ) use ( &$requestResponse ) {
+			$requestResponse = $requestResponseFailed;
+		} );
+
+		$instance->execute();
 		$this->assertRequestResponse( $requestResponse );
 	}
 
