@@ -114,6 +114,7 @@ The library provides unit tests that covers the core-functionality normally run 
 
 * 1.2.0 (2015-11-09)
  - Added "wasAccepted" to `SocketRequest` response output
+ - Added option `ONOI_HTTP_REQUEST_FOLLOWLOCATION` to redirect to the location during a `SocketRequest::ping` request
 
 * 1.1.0 (2015-09-12)
  - Renamed `AsyncCurlRequest` to `MultiCurlRequest`
