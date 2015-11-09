@@ -18,6 +18,7 @@ class MockHttpStreamWrapper {
 
 	protected $streamArray = array();
 	protected $options = array();
+	protected $isOpen = false;
 
 	/**
 	 * StreamWrapper::stream_open
@@ -26,13 +27,26 @@ class MockHttpStreamWrapper {
 		$this->bodyData = self::$mockBodyData;
 		$this->responseCode = self::$mockResponseCode;
 		array_push( $this->streamArray, self::$mockResponseCode );
+		$this->isOpen = true;
 		return true;
+	}
+
+	/**
+	 * StreamWrapper::stream_write
+	 */
+	public function stream_write( $data ) {
+
+		if ( $this->isOpen ) {
+			return strlen( $data );
+		}
+
+		return 0;
 	}
 
 	/**
 	 * StreamWrapper::stream_read
 	 */
-	public function stream_read($count) {
+	public function stream_read( $count ) {
 
 		if ( $this->position > strlen($this->bodyData)) {
 			return false;

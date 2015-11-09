@@ -162,27 +162,29 @@ class SocketRequest implements HttpRequest {
 		);
 
 		// Defaults
-		$response = array(
-			'responseMessage' => "$this->errstr ($this->errno)",
-			'connectionFailure' => -1,
+		$requestResponse = new RequestResponse( array(
+			'host' => $urlComponents['host'],
+			'port' => $urlComponents['port'],
+			'path' => $urlComponents['path'],
+			'responseMessage'  => "$this->errstr ($this->errno)",
+			'followedLocation' => false,
 			'wasCompleted' => false,
 			'wasAccepted'  => false,
-			'followedLocation' => false,
-			'time' => microtime( true )
-		);
+			'connectionFailure' => -1,
+			'requestProcTime'   => microtime( true )
+		) );
 
 		$this->doMakeSocketRequest(
 			$urlComponents,
 			$resource,
-			$response
+			$requestResponse
 		);
 
 		$this->postResponseToCallback(
-			$urlComponents,
-			$response
+			$requestResponse
 		);
 
-		return $response['wasCompleted'];
+		return $requestResponse->get( 'wasCompleted' );
 	}
 
 	protected function getResourceFromSocketClient( $urlComponents, $flags ) {
@@ -202,13 +204,13 @@ class SocketRequest implements HttpRequest {
 		return $resource;
 	}
 
-	private function doMakeSocketRequest( $urlComponents, $resource, &$response ) {
+	private function doMakeSocketRequest( $urlComponents, $resource, RequestResponse &$requestResponse ) {
 
 		if ( !$resource ) {
 			return;
 		}
 
-		$requestResponse = false;
+		$requestCompleted = false;
 		stream_set_timeout( $resource, $this->getOption( ONOI_HTTP_REQUEST_CONNECTION_TIMEOUT ) );
 
 		$httpMessage = (
@@ -223,7 +225,7 @@ class SocketRequest implements HttpRequest {
 		// Sometimes a response can fail (busy server, timeout etc.), try as for
 		// as many times the FAILURE_REPEAT option dictates
 		for ( $repeats = 0; $repeats < $this->getOption( ONOI_HTTP_REQUEST_CONNECTION_FAILURE_REPEAT ); $repeats++ ) {
-			if ( $requestResponse = @fwrite( $resource, $httpMessage ) ) {
+			if ( $requestCompleted = @fwrite( $resource, $httpMessage ) ) {
 				break;
 			}
 		}
@@ -232,11 +234,11 @@ class SocketRequest implements HttpRequest {
 		$this->lastTransferInfo = @fgets( $resource );
 		@fclose( $resource );
 
-		$response['responseMessage'] = $this->lastTransferInfo;
-		$response['followedLocation'] = $this->followedLocation;
-		$response['wasCompleted'] = (bool)$requestResponse;
-		$response['wasAccepted'] = (bool)preg_match( '#^HTTP/\d\.\d 202 #', $response['responseMessage'] );
-		$response['connectionFailure'] = $repeats;
+		$requestResponse->set( 'responseMessage', $this->lastTransferInfo );
+		$requestResponse->set( 'followedLocation', $this->followedLocation );
+		$requestResponse->set( 'wasCompleted', (bool)$requestCompleted );
+		$requestResponse->set( 'wasAccepted', (bool)preg_match( '#^HTTP/\d\.\d 202 #', $this->lastTransferInfo ) );
+		$requestResponse->set( 'connectionFailure', $repeats );
 	}
 
 	private function getUrlComponents( $url ) {
@@ -256,25 +258,15 @@ class SocketRequest implements HttpRequest {
 		);
 	}
 
-	private function postResponseToCallback( $urlComponents, $response ) {
+	private function postResponseToCallback( RequestResponse $requestResponse ) {
 
-		$requestResponse = new RequestResponse( array(
-			'host' => $urlComponents['host'],
-			'port' => $urlComponents['port'],
-			'path' => $urlComponents['path'],
-			'responseMessage'   => $response['responseMessage'],
-			'followedLocation'  => $response['followedLocation'],
-			'wasCompleted'      => $response['wasCompleted'],
-			'wasAccepted'       => $response['wasAccepted'],
-			'connectionFailure' => $response['connectionFailure'],
-			'requestProcTime'   => microtime( true ) - $response['time']
-		) );
+		$requestResponse->set( 'requestProcTime', microtime( true ) - $requestResponse->get( 'requestProcTime' ) );
 
-		if ( is_callable( $this->getOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK ) ) && $response['wasCompleted'] ) {
+		if ( is_callable( $this->getOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK ) ) && $requestResponse->get( 'wasCompleted' ) ) {
 			call_user_func_array( $this->getOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK ), array( $requestResponse ) );
 		}
 
-		if ( is_callable( $this->getOption( ONOI_HTTP_REQUEST_ON_FAILED_CALLBACK ) ) && ( !$response['wasCompleted'] || !$response['wasAccepted'] ) ) {
+		if ( is_callable( $this->getOption( ONOI_HTTP_REQUEST_ON_FAILED_CALLBACK ) ) && ( !$requestResponse->get( 'wasCompleted' ) || !$requestResponse->get( 'wasAccepted' ) ) ) {
 			call_user_func_array( $this->getOption( ONOI_HTTP_REQUEST_ON_FAILED_CALLBACK ), array( $requestResponse ) );
 		}
 	}
