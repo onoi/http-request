@@ -116,7 +116,7 @@ class RequestToPhpHttpdTest extends \PHPUnit_Framework_TestCase {
 		$multiCurlRequest->execute();
 	}
 
-	public function testAsyncResponse() {
+	public function testSocketResponse() {
 
 		$this->connectToHttpd();
 		$expectedToCount = 1;

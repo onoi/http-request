@@ -193,7 +193,7 @@ class SocketRequestTest extends \PHPUnit_Framework_TestCase {
 		);
 
 		foreach ( $expectedRequestResponseFields as $field ) {
-			$this->assertTrue( $requestResponse->has( $field ) );
+			$this->assertTrue( $requestResponse->has( $field ), 'Failed for ' . $field );
 		}
 	}
 
@@ -210,7 +210,8 @@ class SocketRequestTest extends \PHPUnit_Framework_TestCase {
 			'ONOI_HTTP_REQUEST_CONTENT_TYPE',
 			'ONOI_HTTP_REQUEST_METHOD',
 			'ONOI_HTTP_REQUEST_PROTOCOL_VERSION',
-			'ONOI_HTTP_REQUEST_SSL_VERIFYPEER'
+			'ONOI_HTTP_REQUEST_SSL_VERIFYPEER',
+			'ONOI_HTTP_REQUEST_FOLLOWLOCATION'
 		);
 
 		$instance = new SocketRequest();

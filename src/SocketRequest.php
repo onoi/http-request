@@ -41,6 +41,11 @@ class SocketRequest implements HttpRequest {
 	private $lastTransferInfo = '';
 
 	/**
+	 * @var boolean
+	 */
+	private $followedLocation = false;
+
+	/**
 	 * @since 1.1
 	 *
 	 * @param string|null $url
@@ -53,6 +58,7 @@ class SocketRequest implements HttpRequest {
 		$this->setOption( ONOI_HTTP_REQUEST_METHOD, 'POST' );
 		$this->setOption( ONOI_HTTP_REQUEST_CONTENT_TYPE, "application/x-www-form-urlencoded" );
 		$this->setOption( ONOI_HTTP_REQUEST_SSL_VERIFYPEER, false );
+		$this->setOption( ONOI_HTTP_REQUEST_FOLLOWLOCATION, true );
 	}
 
 	/**
@@ -86,6 +92,11 @@ class SocketRequest implements HttpRequest {
 		);
 
 		$res = @fwrite( $resource, $httpMessage );
+
+		if ( $this->getOption( ONOI_HTTP_REQUEST_FOLLOWLOCATION ) && $res !== false ) {
+			$this->setOption( ONOI_HTTP_REQUEST_URL, $this->tryToFindFollowLocation( $resource, $urlComponents ) );
+		}
+
 		@fclose( $resource );
 
 		return $res !== false;
@@ -156,6 +167,7 @@ class SocketRequest implements HttpRequest {
 			'connectionFailure' => -1,
 			'wasCompleted' => false,
 			'wasAccepted'  => false,
+			'followedLocation' => false,
 			'time' => microtime( true )
 		);
 
@@ -173,7 +185,7 @@ class SocketRequest implements HttpRequest {
 		return $response['wasCompleted'];
 	}
 
-	private function getResourceFromSocketClient( $urlComponents, $flags ) {
+	protected function getResourceFromSocketClient( $urlComponents, $flags ) {
 
 		$context = stream_context_create();
 		stream_context_set_option( $context, 'ssl', 'verify_peer', $this->getOption( ONOI_HTTP_REQUEST_SSL_VERIFYPEER ) );
@@ -221,6 +233,7 @@ class SocketRequest implements HttpRequest {
 		@fclose( $resource );
 
 		$response['responseMessage'] = $this->lastTransferInfo;
+		$response['followedLocation'] = $this->followedLocation;
 		$response['wasCompleted'] = (bool)$requestResponse;
 		$response['wasAccepted'] = (bool)preg_match( '#^HTTP/\d\.\d 202 #', $response['responseMessage'] );
 		$response['connectionFailure'] = $repeats;
@@ -230,14 +243,16 @@ class SocketRequest implements HttpRequest {
 
 		$urlComponents = parse_url( $url );
 
+		$urlComponents['scheme'] = isset( $urlComponents['scheme'] ) ? $urlComponents['scheme'] : '';
 		$urlComponents['host'] = isset( $urlComponents['host'] ) ? $urlComponents['host'] : '';
 		$urlComponents['port'] = isset( $urlComponents['port'] ) ? $urlComponents['port'] : 80;
 		$urlComponents['path'] = isset( $urlComponents['path'] ) ? $urlComponents['path'] : '';
 
 		return array(
-			'host' => $urlComponents['host'],
-			'port' => $urlComponents['port'],
-			'path' => $urlComponents['path']
+			'scheme' => $urlComponents['scheme'],
+			'host'   => $urlComponents['host'],
+			'port'   => $urlComponents['port'],
+			'path'   => $urlComponents['path']
 		);
 	}
 
@@ -248,6 +263,7 @@ class SocketRequest implements HttpRequest {
 			'port' => $urlComponents['port'],
 			'path' => $urlComponents['path'],
 			'responseMessage'   => $response['responseMessage'],
+			'followedLocation'  => $response['followedLocation'],
 			'wasCompleted'      => $response['wasCompleted'],
 			'wasAccepted'       => $response['wasAccepted'],
 			'connectionFailure' => $response['connectionFailure'],
@@ -261,6 +277,28 @@ class SocketRequest implements HttpRequest {
 		if ( is_callable( $this->getOption( ONOI_HTTP_REQUEST_ON_FAILED_CALLBACK ) ) && ( !$response['wasCompleted'] || !$response['wasAccepted'] ) ) {
 			call_user_func_array( $this->getOption( ONOI_HTTP_REQUEST_ON_FAILED_CALLBACK ), array( $requestResponse ) );
 		}
+	}
+
+	private function tryToFindFollowLocation( $resource, $urlComponents ) {
+
+		// http://stackoverflow.com/questions/3799134/how-to-get-final-url-after-following-http-redirections-in-pure-php
+
+		$response = '';
+		while( !feof( $resource ) ) $response .= fread( $resource, 8192 );
+
+		// Only try to match a 301 message (Moved Permanently)
+		if ( preg_match( '#^HTTP/\d\.\d 301 #', $response ) && preg_match('/^Location: (.+?)$/m', $response, $matches ) ) {
+			$this->followedLocation = true;
+
+			if ( substr( $matches[1], 0, 1 ) == "/" ) {
+				return $urlComponents['scheme'] . "://" . $urlComponents['host'] . trim( $matches[1] );
+			}
+
+			return trim( $matches[1] );
+		}
+
+		// Return the URL we know
+		return $this->getOption( ONOI_HTTP_REQUEST_URL );
 	}
 
 }
