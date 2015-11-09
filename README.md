@@ -112,6 +112,9 @@ The library provides unit tests that covers the core-functionality normally run 
 
 ## Release notes
 
+* 1.2.0 (2015-11-09)
+ - Added "wasAccepted" to `SocketRequest` response output
+
 * 1.1.0 (2015-09-12)
  - Renamed `AsyncCurlRequest` to `MultiCurlRequest`
  - Deprecated `MultiCurlRequest::setCallback` and to be replaced by `MultiCurlRequest::setOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK, ... )`

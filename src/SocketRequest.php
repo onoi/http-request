@@ -155,7 +155,8 @@ class SocketRequest implements HttpRequest {
 			'responseMessage' => "$this->errstr ($this->errno)",
 			'connectionFailure' => -1,
 			'wasCompleted' => false,
-			'time'    => microtime( true )
+			'wasAccepted'  => false,
+			'time' => microtime( true )
 		);
 
 		$this->doMakeSocketRequest(
@@ -221,7 +222,7 @@ class SocketRequest implements HttpRequest {
 
 		$response['responseMessage'] = $this->lastTransferInfo;
 		$response['wasCompleted'] = (bool)$requestResponse;
-		$response['wasAccepted'] = (bool)preg_match( '#^HTTP/\d\.\d 202 #', $requestResponse );
+		$response['wasAccepted'] = (bool)preg_match( '#^HTTP/\d\.\d 202 #', $response['responseMessage'] );
 		$response['connectionFailure'] = $repeats;
 	}
 
@@ -253,7 +254,7 @@ class SocketRequest implements HttpRequest {
 			'requestProcTime'   => microtime( true ) - $response['time']
 		) );
 
-		if ( is_callable( $this->getOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK ) ) ) {
+		if ( is_callable( $this->getOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK ) ) && $response['wasCompleted'] ) {
 			call_user_func_array( $this->getOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK ), array( $requestResponse ) );
 		}
 
