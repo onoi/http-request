@@ -31,8 +31,9 @@ class RequestToExternalUrlTest extends \PHPUnit_Framework_TestCase {
 			$this->markTestSkipped( "Can't connect to " . $target );
 		}
 
-		$instance->setExpiryInSeconds( 42 );
 		$instance->setOption( CURLOPT_RETURNTRANSFER, true );
+		$instance->setOption( ONOI_HTTP_REQUEST_RESPONSECACHE_TTL, 42 );
+		$instance->setOption( ONOI_HTTP_REQUEST_RESPONSECACHE_PREFIX, 'foo' );
 
 		$this->assertInternalType(
 			'string',
@@ -40,15 +41,18 @@ class RequestToExternalUrlTest extends \PHPUnit_Framework_TestCase {
 		);
 
 		$this->assertFalse(
-			$instance->isCached()
+			$instance->isFromCache()
 		);
 
 		// Repeated request
 		$instance->setOption( CURLOPT_RETURNTRANSFER, true );
+		$instance->setOption( ONOI_HTTP_REQUEST_RESPONSECACHE_TTL, 42 );
+		$instance->setOption( ONOI_HTTP_REQUEST_RESPONSECACHE_PREFIX, 'foo' );
+
 		$instance->execute();
 
 		$this->assertTrue(
-			$instance->isCached()
+			$instance->isFromCache()
 		);
 	}
 

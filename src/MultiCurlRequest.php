@@ -96,7 +96,7 @@ class MultiCurlRequest implements HttpRequest {
 
 		$this->options[$name] = $value;
 
-		// InternaL ONOI options are not further relayed
+		// Internal ONOI options are not further relayed
 		if ( strpos( $name, 'ONOI_HTTP_REQUEST' ) !== false ) {
 			return;
 		}
