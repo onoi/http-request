@@ -160,4 +160,26 @@ class CachedCurlRequestTest extends \PHPUnit_Framework_TestCase {
 		}
 	}
 
+	public function testDeprecatedFunctions() {
+
+		$cache = $this->getMockBuilder( '\Onoi\Cache\Cache' )
+			->disableOriginalConstructor()
+			->getMockForAbstractClass();
+
+		$instance = new CachedCurlRequest( curl_init(), $cache );
+
+		$instance->setExpiryInSeconds( 42 );
+		$instance->setCachePrefix( 'Foo' );
+
+		$this->assertEquals(
+			42,
+			$instance->getOption( ONOI_HTTP_REQUEST_RESPONSECACHE_TTL )
+		);
+
+		$this->assertEquals(
+			'Foo',
+			$instance->getOption( ONOI_HTTP_REQUEST_RESPONSECACHE_PREFIX )
+		);
+	}
+
 }

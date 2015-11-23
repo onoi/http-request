@@ -20,7 +20,7 @@ class MockedHttpStreamSocketRequestTest extends \PHPUnit_Framework_TestCase {
 
 		stream_wrapper_unregister( 'http' );
 		$return = stream_wrapper_register(
-			'http', 
+			'http',
 			'Onoi\HttpRequest\Tests\MockHttpStreamWrapper'
 		);
 
@@ -74,6 +74,25 @@ class MockedHttpStreamSocketRequestTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(
 			$expectedUrl,
 			$instance->getOption( ONOI_HTTP_REQUEST_URL )
+		);
+	}
+
+	public function testToReturnInvalidResource() {
+
+		$instance = $this->getMockBuilder( '\Onoi\HttpRequest\SocketRequest' )
+			->disableOriginalConstructor()
+			->setMethods( array( 'getResourceFromSocketClient' ) )
+			->getMock();
+
+		$instance->expects( $this->once() )
+			->method( 'getResourceFromSocketClient' )
+			->will( $this->returnValue( false ) );
+
+		$instance->setOption( ONOI_HTTP_REQUEST_URL, 'http://example.com/' );
+
+		$this->assertEquals(
+			false,
+			$instance->execute()
 		);
 	}
 
