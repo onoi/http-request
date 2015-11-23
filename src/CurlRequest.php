@@ -15,7 +15,7 @@ class CurlRequest implements HttpRequest {
 	/**
 	 * @var resource
 	 */
-	private $handle;
+	protected $handle;
 
 	/**
 	 * @var array

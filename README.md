@@ -30,7 +30,7 @@ dependency to your [composer.json][composer].
 ```json
 {
 	"require": {
-		"onoi/http-request": "~1.2"
+		"onoi/http-request": "~1.3"
 	}
 }
 ```
@@ -50,7 +50,7 @@ class Foo {
 		$this->curlRequest = $curlRequest;
 	}
 
-	public function makeHttpRequestTo( $url ) {
+	public function doMakeHttpRequestTo( $url ) {
 
 		$this->curlRequest->setOption( CURLOPT_URL, $url );
 
@@ -78,7 +78,7 @@ class Foo {
 $httpRequestFactory = new HttpRequestFactory();
 
 $instance = new Foo( $httpRequestFactory->newCurlRequest() );
-$instance->makeHttpRequestTo( 'http://example.org' );
+$response = $instance->doMakeHttpRequestTo( 'http://example.org' );
 
 OR
 
@@ -90,12 +90,14 @@ $compositeCache = $cacheFactory->newCompositeCache( array(
 ) );
 
 $httpRequestFactory = new HttpRequestFactory( $compositeCache );
-
 $cachedCurlRequest = $httpRequestFactory->newCachedCurlRequest();
-$cachedCurlRequest->setExpiryInSeconds( 60 * 60 );
+
+// Responses for a request with the same signature (== same endpoint and same query
+// content) will be cached if the request was successful for a specified 1 h (3600 sec)
+$cachedCurlRequest->setOption( ONOI_HTTP_REQUEST_RESPONSECACHE_TTL, 60 * 60 );
 
 $instance = new Foo( $cachedCurlRequest );
-$instance->makeHttpRequestTo( 'http://example.org' );
+$response = $instance->doMakeHttpRequestTo( 'http://example.org' );
 ```
 
 ## Contribution and support
@@ -111,6 +113,12 @@ developers mailing list and have a look at the [contribution guidelinee](/CONTRI
 The library provides unit tests that covers the core-functionality normally run by the [continues integration platform][travis]. Tests can also be executed manually using the PHPUnit configuration file found in the root directory.
 
 ## Release notes
+
+* 1.3.0 (2015-11-23)
+ - Deprecated `CachedCurlRequest::setCachePrefix` and `CachedCurlRequest::setExpiryInSeconds` in favor of setting it via the option
+   `ONOI_HTTP_REQUEST_RESPONSECACHE_PREFIX` and `ONOI_HTTP_REQUEST_RESPONSECACHE_TTL` (any change in the expiry will auto-invalidate existing cached items
+   to accommodated to the modified setting)
+ - Deprecated `CachedCurlRequest::isCached` in favor of `CachedCurlRequest::isFromCache`
 
 * 1.2.0 (2015-11-09)
  - Added "wasAccepted" to the `SocketRequest` response output
