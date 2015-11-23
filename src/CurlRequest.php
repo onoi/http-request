@@ -15,7 +15,7 @@ class CurlRequest implements HttpRequest {
 	/**
 	 * @var resource
 	 */
-	protected $handle;
+	private $handle;
 
 	/**
 	 * @var array
@@ -72,6 +72,11 @@ class CurlRequest implements HttpRequest {
 	public function setOption( $name, $value ) {
 
 		$this->options[$name] = $value;
+
+		// Internal ONOI options are not further relayed
+		if ( strpos( $name, 'ONOI_HTTP_REQUEST' ) !== false ) {
+			return;
+		}
 
 		curl_setopt(
 			$this->handle,

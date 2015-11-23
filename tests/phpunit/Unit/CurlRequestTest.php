@@ -93,4 +93,15 @@ class CurlRequestTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
+	public function testSetOptionUsingOnoiSpecificConstantDoesNotCauseAnyFailureWithCurl_Setopt() {
+
+		$instance = new CurlRequest( curl_init( null ) );
+		$instance->setOption( ONOI_HTTP_REQUEST_RESPONSECACHE_TTL, 42 );
+
+		$this->assertEquals(
+			42,
+			$instance->getOption( ONOI_HTTP_REQUEST_RESPONSECACHE_TTL )
+		);
+	}
+
 }

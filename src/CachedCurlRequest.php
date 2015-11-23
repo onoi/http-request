@@ -84,28 +84,6 @@ class CachedCurlRequest extends CurlRequest {
 	}
 
 	/**
-	 * @since 1.3
-	 *
-	 * @param string $name
-	 * @param mixed $value
-	 */
-	public function setOption( $name, $value ) {
-
-		$this->options[$name] = $value;
-
-		// Internal ONOI options are not further relayed
-		if ( strpos( $name, 'ONOI_HTTP_REQUEST' ) !== false ) {
-			return;
-		}
-
-		curl_setopt(
-			$this->handle,
-			$name,
-			$value
-		);
-	}
-
-	/**
 	 * @since  1.0
 	 *
 	 * @return mixed
