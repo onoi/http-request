@@ -116,8 +116,7 @@ The library provides unit tests that covers the core-functionality normally run 
 
 * 1.3.0 (2015-11-23)
  - Deprecated `CachedCurlRequest::setCachePrefix` and `CachedCurlRequest::setExpiryInSeconds` in favor of setting it via the option
-   `ONOI_HTTP_REQUEST_RESPONSECACHE_PREFIX` and `ONOI_HTTP_REQUEST_RESPONSECACHE_TTL` (any change in the expiry will auto-invalidate existing cached items
-   to accommodated to the modified setting)
+   `ONOI_HTTP_REQUEST_RESPONSECACHE_PREFIX` and `ONOI_HTTP_REQUEST_RESPONSECACHE_TTL` (any change in the expiry will auto-invalidate existing items in cache)
  - Deprecated `CachedCurlRequest::isCached` in favor of `CachedCurlRequest::isFromCache`
 
 * 1.2.0 (2015-11-09)
