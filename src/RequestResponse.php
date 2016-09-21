@@ -71,4 +71,15 @@ class RequestResponse {
 		return $this->fields;
 	}
 
+	/**
+	 * @since 1.4
+	 *
+	 * @param integer $flags
+	 *
+	 * @return string
+	 */
+	public function asJsonString( $flags = 0 ) {
+		return json_encode( $this->fields, $flags );
+	}
+
 }

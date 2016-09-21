@@ -42,6 +42,11 @@ class RequestResponseTest extends \PHPUnit_Framework_TestCase {
 			array( 'Foo' => 42 ),
 			$instance->getList()
 		);
+
+		$this->assertInternalType(
+			'string',
+			$instance->asJsonString()
+		);
 	}
 
 	public function testUnregisteredKeyThrowsException() {
