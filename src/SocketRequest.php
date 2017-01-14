@@ -6,12 +6,12 @@ use InvalidArgumentException;
 use Closure;
 
 /**
- * This class creates a remote socked connection to initiate an asynchronous http
- * request.
+ * This class creates a remote socked connection to initiate an asynchronous
+ * http/https request.
  *
  * Once a connection is established and content has been posted, the request
  * will close the connection. The receiving client is responsible for open
- * a separate process and initiated a independent transaction.
+ * a separate process and initiated an independent transaction.
  *
  * @license GNU GPL v2+
  * @since 1.1
@@ -244,11 +244,22 @@ class SocketRequest implements HttpRequest {
 	private function getUrlComponents( $url ) {
 
 		$urlComponents = parse_url( $url );
+		$port = 80;
 
 		$urlComponents['scheme'] = isset( $urlComponents['scheme'] ) ? $urlComponents['scheme'] : '';
 		$urlComponents['host'] = isset( $urlComponents['host'] ) ? $urlComponents['host'] : '';
-		$urlComponents['port'] = isset( $urlComponents['port'] ) ? $urlComponents['port'] : 80;
 		$urlComponents['path'] = isset( $urlComponents['path'] ) ? $urlComponents['path'] : '';
+
+		if ( isset( $urlComponents['scheme'] ) && $urlComponents['scheme'] == 'https' ) {
+			$urlComponents['host'] = "tls://" . $urlComponents['host'];
+			$port = 443;
+		}
+
+		if ( $this->getOption( ONOI_HTTP_REQUEST_SOCKET_PORT ) !== null ) {
+			$port = $this->getOption( ONOI_HTTP_REQUEST_SOCKET_PORT );
+		}
+
+		$urlComponents['port'] = isset( $urlComponents['port'] ) ? $urlComponents['port'] : $port;
 
 		return array(
 			'scheme' => $urlComponents['scheme'],
@@ -276,6 +287,8 @@ class SocketRequest implements HttpRequest {
 		// http://stackoverflow.com/questions/3799134/how-to-get-final-url-after-following-http-redirections-in-pure-php
 
 		$response = '';
+		$host = str_replace( 'tls://', '', $urlComponents['host'] );
+
 		while( !feof( $resource ) ) $response .= fread( $resource, 8192 );
 
 		// Only try to match a 301 message (Moved Permanently)
@@ -283,7 +296,7 @@ class SocketRequest implements HttpRequest {
 			$this->followedLocation = true;
 
 			if ( substr( $matches[1], 0, 1 ) == "/" ) {
-				return $urlComponents['scheme'] . "://" . $urlComponents['host'] . trim( $matches[1] );
+				return $urlComponents['scheme'] . "://" . $host . trim( $matches[1] );
 			}
 
 			return trim( $matches[1] );

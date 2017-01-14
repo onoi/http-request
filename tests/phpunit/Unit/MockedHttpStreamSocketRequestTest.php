@@ -119,6 +119,34 @@ class MockedHttpStreamSocketRequestTest extends \PHPUnit_Framework_TestCase {
 			'http://example.com/foo'
 		);
 
+		$urlComponent = array (
+			'scheme' => 'https',
+			'host' => 'tls://example.com',
+			'port' => 443,
+			'path' => ''
+		);
+
+		$provider[] = array(
+			'https://example.com',
+			$urlComponent,
+			'/foo',
+			'https://example.com/foo'
+		);
+
+		$urlComponent = array (
+			'scheme' => 'https',
+			'host' => 'tls://example.com',
+			'port' => 4443,
+			'path' => ''
+		);
+
+		$provider[] = array(
+			'https://example.com:4443',
+			$urlComponent,
+			'/foo',
+			'https://example.com/foo'
+		);
+
 		return $provider;
 	}
 

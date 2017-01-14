@@ -114,6 +114,9 @@ The library provides unit tests that covers the core-functionality normally run 
 
 ## Release notes
 
+* 1.3.1 (2016-01-14)
+ - Extended `SocketRequest` to match a possible TLS port
+
 * 1.3.0 (2015-11-23)
  - Deprecated `CachedCurlRequest::setCachePrefix` and `CachedCurlRequest::setExpiryInSeconds` in favor of setting it via the option
    `ONOI_HTTP_REQUEST_RESPONSECACHE_PREFIX` and `ONOI_HTTP_REQUEST_RESPONSECACHE_TTL` (any change in the expiry will auto-invalidate existing items in cache)
