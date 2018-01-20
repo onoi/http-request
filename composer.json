@@ -7,10 +7,10 @@
 		"curl"
 	],
 	"homepage": "https://github.com/onoi/http-request",
-	"license": "GPL-2.0+",
+	"license": "GPL-2.0-or-later",
 	"authors": [
 		{
-			"name": "mwjames",
+			"name": "James Hong Kong",
 			"homepage": "https://github.com/mwjames"
 		}
 	],
