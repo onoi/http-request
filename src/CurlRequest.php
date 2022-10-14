@@ -29,7 +29,7 @@ class CurlRequest implements HttpRequest {
 	 */
 	public function __construct( $handle ) {
 
-		if ( get_resource_type( $handle ) !== 'curl' ) {
+		if ( ( is_resource( $handle ) && get_resource_type( $handle ) !== 'curl' ) || $handle instanceof CurlHandle ) {
 			throw new InvalidArgumentException( "Expected a cURL resource type" );
 		}
 
