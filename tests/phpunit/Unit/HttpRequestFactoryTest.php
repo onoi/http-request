@@ -13,7 +13,7 @@ use Onoi\HttpRequest\HttpRequestFactory;
  *
  * @author mwjames
  */
-class HttpRequestFactoryTest extends \PHPUnit_Framework_TestCase {
+class HttpRequestFactoryTest extends \PHPUnit\Framework\TestCase {
 
 	public function testCanConstruct() {
 

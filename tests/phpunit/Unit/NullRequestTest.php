@@ -13,7 +13,7 @@ use Onoi\HttpRequest\NullRequest;
  *
  * @author mwjames
  */
-class NullRequestTest extends \PHPUnit_Framework_TestCase {
+class NullRequestTest extends \PHPUnit\Framework\TestCase {
 
 	public function testCanConstruct() {
 
@@ -34,38 +34,31 @@ class NullRequestTest extends \PHPUnit_Framework_TestCase {
 
 		$instance = new NullRequest();
 
-		$this->assertInternalType(
-			'boolean',
+		$this->assertIsBool(
 			$instance->ping()
 		);
 
-		$this->assertInternalType(
-			'null',
+		$this->assertNull(
 			$instance->setOption( 'foo', 42 )
 		);
 
-		$this->assertInternalType(
-			'null',
+		$this->assertNull(
 			$instance->getOption( 'foo' )
 		);
 
-		$this->assertInternalType(
-			'null',
+		$this->assertNull(
 			$instance->getLastTransferInfo()
 		);
 
-		$this->assertInternalType(
-			'string',
+		$this->assertIsString(
 			$instance->getLastError()
 		);
 
-		$this->assertInternalType(
-			'integer',
+		$this->assertIsInt(
 			$instance->getLastErrorCode()
 		);
 
-		$this->assertInternalType(
-			'null',
+		$this->assertNull(
 			$instance->execute()
 		);
 	}

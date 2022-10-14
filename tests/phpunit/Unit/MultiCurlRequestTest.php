@@ -14,7 +14,7 @@ use Onoi\HttpRequest\CurlRequest;
  *
  * @author mwjames
  */
-class MultiCurlRequestTest extends \PHPUnit_Framework_TestCase {
+class MultiCurlRequestTest extends \PHPUnit\Framework\TestCase {
 
 	public function testCanConstruct() {
 
@@ -32,7 +32,7 @@ class MultiCurlRequestTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testWrongResourceTypeThrowsException() {
-		$this->setExpectedException( 'InvalidArgumentException' );
+		$this->expectException( 'InvalidArgumentException' );
 		new MultiCurlRequest( curl_init() );
 	}
 
@@ -98,13 +98,11 @@ class MultiCurlRequestTest extends \PHPUnit_Framework_TestCase {
 			new CurlRequest( curl_init() )
 		);
 
-		$this->assertInternalType(
-			'array',
+		$this->assertIsArray(
 			$instance->execute()
 		);
 
-		$this->assertInternalType(
-			'string',
+		$this->assertIsString(
 			$instance->getLastError()
 		);
 

@@ -14,7 +14,7 @@ use Onoi\Cache\FixedInMemoryLruCache;
  *
  * @author mwjames
  */
-class RequestToExternalUrlTest extends \PHPUnit_Framework_TestCase {
+class RequestToExternalUrlTest extends \PHPUnit\Framework\TestCase {
 
 	public function testCachedRequestToExternalUrl() {
 
@@ -35,8 +35,7 @@ class RequestToExternalUrlTest extends \PHPUnit_Framework_TestCase {
 		$instance->setOption( ONOI_HTTP_REQUEST_RESPONSECACHE_TTL, 42 );
 		$instance->setOption( ONOI_HTTP_REQUEST_RESPONSECACHE_PREFIX, 'foo' );
 
-		$this->assertInternalType(
-			'string',
+		$this->assertIsString(
 			$instance->execute()
 		);
 
