@@ -40,7 +40,7 @@ class MultiCurlRequest implements HttpRequest {
 	 */
 	public function __construct( $handle ) {
 
-		if ( get_resource_type( $handle ) !== 'curl_multi' ) {
+		if ( ( is_resource( $handle ) && get_resource_type( $handle ) !== 'curl_multi' ) || $handle instanceof CurlMultiHandle ) {
 			throw new InvalidArgumentException( "Expected a cURL multi resource type" );
 		}
 

@@ -13,9 +13,9 @@ use Onoi\HttpRequest\SocketRequest;
  *
  * @author mwjames
  */
-class MockedHttpStreamSocketRequestTest extends \PHPUnit_Framework_TestCase {
+class MockedHttpStreamSocketRequestTest extends \PHPUnit\Framework\TestCase {
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		stream_wrapper_unregister( 'http' );
@@ -44,7 +44,7 @@ class MockedHttpStreamSocketRequestTest extends \PHPUnit_Framework_TestCase {
 		return fopen( 'http://example.com', 'r', false, $context );
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		stream_wrapper_restore('http');
 	}
 

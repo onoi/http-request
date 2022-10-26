@@ -13,7 +13,7 @@ use Onoi\HttpRequest\CurlRequest;
  *
  * @author mwjames
  */
-class CurlRequestTest extends \PHPUnit_Framework_TestCase {
+class CurlRequestTest extends \PHPUnit\Framework\TestCase {
 
 	public function testCanConstruct() {
 
@@ -31,7 +31,7 @@ class CurlRequestTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testWrongResourceTypeThrowsException() {
-		$this->setExpectedException( 'InvalidArgumentException' );
+		$this->expectException( 'InvalidArgumentException' );
 		new CurlRequest( curl_multi_init() );
 	}
 
@@ -45,8 +45,7 @@ class CurlRequestTest extends \PHPUnit_Framework_TestCase {
 
 		$instance->setOption( CURLOPT_URL, 'http://example.org' );
 
-		$this->assertInternalType(
-			'boolean',
+		$this->assertIsBool(
 			$instance->ping()
 		);
 	}
@@ -55,8 +54,7 @@ class CurlRequestTest extends \PHPUnit_Framework_TestCase {
 
 		$instance = new CurlRequest( curl_init() );
 
-		$this->assertInternalType(
-			'string',
+		$this->assertIsString(
 			$instance->getLastError()
 		);
 	}
@@ -65,8 +63,7 @@ class CurlRequestTest extends \PHPUnit_Framework_TestCase {
 
 		$instance = new CurlRequest( curl_init() );
 
-		$this->assertInternalType(
-			'integer',
+		$this->assertIsInt(
 			$instance->getLastErrorCode()
 		);
 	}
