@@ -13,7 +13,7 @@ use InvalidArgumentException;
 class CurlRequest implements HttpRequest {
 
 	/**
-	 * @var resource
+	 * @var resource|CurlHandle
 	 */
 	private $handle;
 
@@ -25,11 +25,16 @@ class CurlRequest implements HttpRequest {
 	/**
 	 * @since 1.0
 	 *
-	 * @param resource $handle
+	 * @param resource|CurlHandle|false $handle
 	 */
 	public function __construct( $handle ) {
 
-		if ( get_resource_type( $handle ) !== 'curl' ) {
+		// PHP 8.0
+		$isCurlHandle = class_exists( '\CurlHandle' ) && $handle instanceof \CurlHandle;
+
+		// PHP 7
+		if ( $handle === false ||
+			( !$isCurlHandle && get_resource_type( $handle ) !== 'curl' ) ) {
 			throw new InvalidArgumentException( "Expected a cURL resource type" );
 		}
 
