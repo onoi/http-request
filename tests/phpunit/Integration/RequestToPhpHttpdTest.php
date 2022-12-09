@@ -14,7 +14,7 @@ use RuntimeException;
  *
  * @author mwjames
  */
-class RequestToPhpHttpdTest extends \PHPUnit_Framework_TestCase {
+class RequestToPhpHttpdTest extends \PHPUnit\Framework\TestCase {
 
 	private static $pid;
 
@@ -25,7 +25,7 @@ class RequestToPhpHttpdTest extends \PHPUnit_Framework_TestCase {
 	 * Options defined in phpunit.xml.dist
 	 * @see https://github.com/vgno/tech.vg.no-1812/blob/master/features/bootstrap/FeatureContext.php
 	 */
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass(): void {
 
 		$command = sprintf( 'php -S %s:%d -t %s >/dev/null 2>&1 & echo $!',
 			WEB_SERVER_HOST,
@@ -39,7 +39,7 @@ class RequestToPhpHttpdTest extends \PHPUnit_Framework_TestCase {
 		self::$pid = (int) $output[0];
 	}
 
-	public static function tearDownAfterClass() {
+	public static function tearDownAfterClass(): void {
 	//	exec( 'kill ' . (int) self::$pid );
 	}
 

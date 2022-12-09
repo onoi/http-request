@@ -1,8 +1,6 @@
 # Http request
 
-[![Build Status](https://secure.travis-ci.org/onoi/http-request.svg?branch=master)](http://travis-ci.org/onoi/http-request)
-[![Code Coverage](https://scrutinizer-ci.com/g/onoi/http-request/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/onoi/http-request/?branch=master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/onoi/http-request/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/onoi/http-request/?branch=master)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/onoi/http-request/CI)](https://github.com/onoi/http-request/actions?query=workflow%3ACI)
 [![Latest Stable Version](https://poser.pugx.org/onoi/http-request/version.png)](https://packagist.org/packages/onoi/http-request)
 [![Packagist download count](https://poser.pugx.org/onoi/http-request/d/total.png)](https://packagist.org/packages/onoi/http-request)
 [![Dependency Status](https://www.versioneye.com/php/onoi:http-request/badge.png)](https://www.versioneye.com/php/onoi:http-request)
@@ -20,7 +18,7 @@ This library provides:
 
 ## Requirements
 
-- PHP 5.3 or later
+- PHP 8.0 or later
 
 ## Installation
 
@@ -30,7 +28,7 @@ dependency to your [composer.json][composer].
 ```json
 {
 	"require": {
-		"onoi/http-request": "~1.3"
+		"onoi/http-request": "~2.0"
 	}
 }
 ```
@@ -113,6 +111,9 @@ developers mailing list and have a look at the [contribution guidelinee](/CONTRI
 The library provides unit tests that covers the core-functionality normally run by the [continues integration platform][travis]. Tests can also be executed manually using the PHPUnit configuration file found in the root directory.
 
 ## Release notes
+
+* 2.0.0 (Under development)
+ - Increased minimum PHP requirement to 8.0
 
 * 1.3.1 (2016-01-14)
  - Extended `SocketRequest` to match a possible TLS port

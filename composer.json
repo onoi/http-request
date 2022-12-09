@@ -15,11 +15,11 @@
 		}
 	],
 	"require": {
-		"php": ">=5.3.2",
+		"php": ">=8.0",
 		"onoi/cache": "~1.2"
 	},
 	"suggest": {
-		"lib-curl": "Allows making CURL requests"	
+		"lib-curl": "Allows making CURL requests"
 	},
 	"extra": {
 		"branch-alias": {
@@ -31,10 +31,19 @@
 			"Onoi\\HttpRequest\\": "src/"
 		}
 	},
+	"autoload-dev": {
+		"psr-4": {
+			"Onoi\\HttpRequest\\Tests\\": "tests/phpunit/Unit",
+			"Onoi\\HttpRequest\\Tests\\Integration\\": "tests/phpunit/Integration"
+		}
+	},
 	"config": {
 		"process-timeout": 0
 	},
 	"scripts":{
 		"phpunit": "phpunit -c phpunit.xml.dist"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^9.5"
 	}
 }

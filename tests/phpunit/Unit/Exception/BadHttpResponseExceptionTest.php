@@ -14,11 +14,11 @@ use Onoi\HttpRequest\Exception\BadHttpResponseException;
  *
  * @author mwjames
  */
-class BadHttpResponseExceptionTest extends \PHPUnit_Framework_TestCase {
+class BadHttpResponseExceptionTest extends \PHPUnit\Framework\TestCase {
 
 	private $httpRequest;
 
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->httpRequest = $this->getMockBuilder( '\Onoi\HttpRequest\HttpRequest' )
@@ -73,7 +73,7 @@ class BadHttpResponseExceptionTest extends \PHPUnit_Framework_TestCase {
 
 		$e = new BadHttpResponseException( $curlRequest );
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'error 3',
 			$e->getMessage()
 		);

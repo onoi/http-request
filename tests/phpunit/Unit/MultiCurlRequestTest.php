@@ -4,6 +4,7 @@ namespace Onoi\HttpRequest\Tests;
 
 use Onoi\HttpRequest\MultiCurlRequest;
 use Onoi\HttpRequest\CurlRequest;
+use TypeError;
 
 /**
  * @covers \Onoi\HttpRequest\MultiCurlRequest
@@ -14,7 +15,7 @@ use Onoi\HttpRequest\CurlRequest;
  *
  * @author mwjames
  */
-class MultiCurlRequestTest extends \PHPUnit_Framework_TestCase {
+class MultiCurlRequestTest extends \PHPUnit\Framework\TestCase {
 
 	public function testCanConstruct() {
 
@@ -32,7 +33,7 @@ class MultiCurlRequestTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	public function testWrongResourceTypeThrowsException() {
-		$this->setExpectedException( 'InvalidArgumentException' );
+		$this->expectException( TypeError::class );
 		new MultiCurlRequest( curl_init() );
 	}
 
@@ -98,13 +99,11 @@ class MultiCurlRequestTest extends \PHPUnit_Framework_TestCase {
 			new CurlRequest( curl_init() )
 		);
 
-		$this->assertInternalType(
-			'array',
+		$this->assertIsArray(
 			$instance->execute()
 		);
 
-		$this->assertInternalType(
-			'string',
+		$this->assertIsString(
 			$instance->getLastError()
 		);
 
@@ -124,7 +123,7 @@ class MultiCurlRequestTest extends \PHPUnit_Framework_TestCase {
 
 		$requestResponse = null;
 
-		$instance->setCallback( function( $requestResponseCompleted ) use ( &$requestResponse ) {
+		$instance->setCallback( function( $requestResponseCompleted ) use ( &$requestResponse ): void {
 			$requestResponse = $requestResponseCompleted;
 		} );
 
@@ -143,7 +142,7 @@ class MultiCurlRequestTest extends \PHPUnit_Framework_TestCase {
 
 		$requestResponse = null;
 
-		$instance->setOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK, function( $requestResponseCompleted ) use ( &$requestResponse ) {
+		$instance->setOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK, function( $requestResponseCompleted ) use ( &$requestResponse ): void {
 			$requestResponse = $requestResponseCompleted;
 		} );
 
@@ -157,7 +156,7 @@ class MultiCurlRequestTest extends \PHPUnit_Framework_TestCase {
 		$this->assertRequestResponse( $requestResponse );
 	}
 
-	private function assertRequestResponse( $requestResponse ) {
+	private function assertRequestResponse( $requestResponse ): void {
 
 		$this->assertInstanceOf(
 			'\Onoi\HttpRequest\RequestResponse',
@@ -174,7 +173,7 @@ class MultiCurlRequestTest extends \PHPUnit_Framework_TestCase {
 		}
 	}
 
-	public function pingConnectionStateProvider() {
+	public function pingConnectionStateProvider(): array {
 
 		$provider[] = array(
 			true

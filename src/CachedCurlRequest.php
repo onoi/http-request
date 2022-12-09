@@ -2,6 +2,7 @@
 
 namespace Onoi\HttpRequest;
 
+use CurlHandle;
 use Onoi\Cache\Cache;
 
 /**
@@ -32,11 +33,8 @@ class CachedCurlRequest extends CurlRequest {
 
 	/**
 	 * @since  1.0
-	 *
-	 * @param resource $handle
-	 * @param Cache $cache
 	 */
-	public function __construct( $handle, Cache $cache ) {
+	public function __construct( CurlHandle|false $handle, Cache $cache ) {
 		parent::__construct( $handle );
 
 		$this->cache = $cache;

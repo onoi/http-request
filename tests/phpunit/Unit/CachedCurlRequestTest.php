@@ -13,7 +13,7 @@ use Onoi\HttpRequest\CachedCurlRequest;
  *
  * @author mwjames
  */
-class CachedCurlRequestTest extends \PHPUnit_Framework_TestCase {
+class CachedCurlRequestTest extends \PHPUnit\Framework\TestCase {
 
 	public function testCanConstruct() {
 
@@ -72,13 +72,12 @@ class CachedCurlRequestTest extends \PHPUnit_Framework_TestCase {
 			->setMethods( array( 'contains' ) )
 			->getMockForAbstractClass();
 
-		$cache->expects( $this->at( 0 ) )
+		$cache->expects( $this->exactly( 2 ) )
 			->method( 'contains' )
-			->with( $this->equalTo( 'onoi:http:7ccbcfd552a597d67077d6cc037580ac' ) );
-
-		$cache->expects( $this->at( 1 ) )
-			->method( 'contains' )
-			->with( $this->equalTo( 'onoi:http:e2015ad4244c4663f10f305e299d5c4f' ) );
+			->withConsecutive(
+				[ $this->equalTo( 'onoi:http:7ccbcfd552a597d67077d6cc037580ac' ) ],
+				[ $this->equalTo( 'onoi:http:e2015ad4244c4663f10f305e299d5c4f' ) ]
+			);
 
 		$instance = new CachedCurlRequest( curl_init(), $cache );
 
@@ -96,13 +95,12 @@ class CachedCurlRequestTest extends \PHPUnit_Framework_TestCase {
 			->setMethods( array( 'contains', 'save' ) )
 			->getMockForAbstractClass();
 
-		$cache->expects( $this->at( 0 ) )
+		$cache->expects( $this->exactly( 2 ) )
 			->method( 'contains' )
-			->with( $this->equalTo( 'onoi:http:236b194825be3d614ce5fc1b7763a278' ) );
-
-		$cache->expects( $this->at( 2 ) )
-			->method( 'contains' )
-			->with( $this->equalTo( 'onoi:http:823a603f972819c10d13f32b14460573' ) );
+			->withConsecutive(
+				[ $this->equalTo( 'onoi:http:236b194825be3d614ce5fc1b7763a278' ) ],
+				[ $this->equalTo( 'onoi:http:823a603f972819c10d13f32b14460573' ) ]
+			);
 
 		$instance = new CachedCurlRequest( curl_init( 'http://example.org' ), $cache );
 

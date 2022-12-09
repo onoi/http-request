@@ -13,7 +13,7 @@ use Onoi\HttpRequest\SocketRequest;
  *
  * @author mwjames
  */
-class SocketRequestTest extends \PHPUnit_Framework_TestCase {
+class SocketRequestTest extends \PHPUnit\Framework\TestCase {
 
 	public function testCanConstruct() {
 
@@ -40,8 +40,7 @@ class SocketRequestTest extends \PHPUnit_Framework_TestCase {
 
 		$instance->setOption( ONOI_HTTP_REQUEST_URL, 'http://example.org' );
 
-		$this->assertInternalType(
-			'boolean',
+		$this->assertIsBool(
 			$instance->ping()
 		);
 	}
@@ -52,8 +51,7 @@ class SocketRequestTest extends \PHPUnit_Framework_TestCase {
 		$instance->setOption( ONOI_HTTP_REQUEST_CONNECTION_TIMEOUT, 1 );
 		$instance->setOption( ONOI_HTTP_REQUEST_URL, 'http://localhost:8888' );
 
-		$this->assertInternalType(
-			'boolean',
+		$this->assertIsBool(
 			$instance->execute()
 		);
 	}
@@ -65,8 +63,7 @@ class SocketRequestTest extends \PHPUnit_Framework_TestCase {
 
 		$instance->execute();
 
-		$this->assertInternalType(
-			'string',
+		$this->assertIsString(
 			$instance->getLastError()
 		);
 	}
@@ -75,8 +72,7 @@ class SocketRequestTest extends \PHPUnit_Framework_TestCase {
 
 		$instance = new SocketRequest();
 
-		$this->assertInternalType(
-			'integer',
+		$this->assertIsInt(
 			$instance->getLastErrorCode()
 		);
 	}
@@ -85,8 +81,7 @@ class SocketRequestTest extends \PHPUnit_Framework_TestCase {
 
 		$instance = new SocketRequest();
 
-		$this->assertInternalType(
-			'string',
+		$this->assertIsString(
 			$instance->getLastTransferInfo()
 		);
 	}
@@ -98,7 +93,7 @@ class SocketRequestTest extends \PHPUnit_Framework_TestCase {
 
 		$requestResponse = null;
 
-		$instance->setOption( ONOI_HTTP_REQUEST_ON_FAILED_CALLBACK, function( $requestResponseFailed ) use ( &$requestResponse ) {
+		$instance->setOption( ONOI_HTTP_REQUEST_ON_FAILED_CALLBACK, function( $requestResponseFailed ) use ( &$requestResponse ): void {
 			$requestResponse = $requestResponseFailed;
 		} );
 
@@ -121,7 +116,7 @@ class SocketRequestTest extends \PHPUnit_Framework_TestCase {
 
 		$requestResponse = null;
 
-		$instance->setOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK, function( $requestResponseCompleted ) use ( &$requestResponse ) {
+		$instance->setOption( ONOI_HTTP_REQUEST_ON_COMPLETED_CALLBACK, function( $requestResponseCompleted ) use ( &$requestResponse ): void {
 			$requestResponse = $requestResponseCompleted;
 		} );
 
@@ -149,7 +144,7 @@ class SocketRequestTest extends \PHPUnit_Framework_TestCase {
 
 		$requestResponse = null;
 
-		$instance->setOption( ONOI_HTTP_REQUEST_ON_FAILED_CALLBACK, function( $requestResponseFailed ) use ( &$requestResponse ) {
+		$instance->setOption( ONOI_HTTP_REQUEST_ON_FAILED_CALLBACK, function( $requestResponseFailed ) use ( &$requestResponse ): void {
 			$requestResponse = $requestResponseFailed;
 		} );
 
@@ -167,7 +162,7 @@ class SocketRequestTest extends \PHPUnit_Framework_TestCase {
 
 		$requestResponse = null;
 
-		$instance->setOption( ONOI_HTTP_REQUEST_ON_FAILED_CALLBACK, function( $requestResponseFailed ) use ( &$requestResponse ) {
+		$instance->setOption( ONOI_HTTP_REQUEST_ON_FAILED_CALLBACK, function( $requestResponseFailed ) use ( &$requestResponse ): void {
 			$requestResponse = $requestResponseFailed;
 		} );
 

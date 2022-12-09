@@ -2,6 +2,7 @@
 
 namespace Onoi\HttpRequest;
 
+use CurlHandle;
 use InvalidArgumentException;
 
 /**
@@ -12,10 +13,7 @@ use InvalidArgumentException;
  */
 class CurlRequest implements HttpRequest {
 
-	/**
-	 * @var resource
-	 */
-	private $handle;
+	private CurlHandle $handle;
 
 	/**
 	 * @var array
@@ -24,12 +22,10 @@ class CurlRequest implements HttpRequest {
 
 	/**
 	 * @since 1.0
-	 *
-	 * @param resource $handle
 	 */
-	public function __construct( $handle ) {
+	public function __construct( CurlHandle|false $handle ) {
 
-		if ( get_resource_type( $handle ) !== 'curl' ) {
+		if ( $handle === false ) {
 			throw new InvalidArgumentException( "Expected a cURL resource type" );
 		}
 

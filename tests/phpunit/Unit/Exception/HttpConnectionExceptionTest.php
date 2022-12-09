@@ -14,7 +14,7 @@ use Onoi\HttpRequest\Exception\HttpConnectionException;
  *
  * @author mwjames
  */
-class HttpConnectionExceptionTest extends \PHPUnit_Framework_TestCase {
+class HttpConnectionExceptionTest extends \PHPUnit\Framework\TestCase {
 
 	public function testCanConstruct() {
 
@@ -28,7 +28,7 @@ class HttpConnectionExceptionTest extends \PHPUnit_Framework_TestCase {
 
 		$e = new HttpConnectionException( 'foo', 42 );
 
-		$this->assertContains(
+		$this->assertStringContainsString(
 			'foo',
 			$e->getMessage()
 		);

@@ -2,6 +2,7 @@
 
 namespace Onoi\HttpRequest\Tests;
 
+use InvalidArgumentException;
 use Onoi\HttpRequest\RequestResponse;
 
 /**
@@ -13,7 +14,7 @@ use Onoi\HttpRequest\RequestResponse;
  *
  * @author mwjames
  */
-class RequestResponseTest extends \PHPUnit_Framework_TestCase {
+class RequestResponseTest extends \PHPUnit\Framework\TestCase {
 
 	public function testCanConstruct() {
 
@@ -43,8 +44,7 @@ class RequestResponseTest extends \PHPUnit_Framework_TestCase {
 			$instance->getList()
 		);
 
-		$this->assertInternalType(
-			'string',
+		$this->assertIsString(
 			$instance->asJsonString()
 		);
 	}
@@ -53,7 +53,7 @@ class RequestResponseTest extends \PHPUnit_Framework_TestCase {
 
 		$instance = new RequestResponse();
 
-		$this->setExpectedException( 'InvalidArgumentException' );
+		$this->expectException( InvalidArgumentException::class );
 		$instance->get( 'Foo' );
 	}
 

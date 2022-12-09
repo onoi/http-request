@@ -2,8 +2,9 @@
 
 namespace Onoi\HttpRequest;
 
-use InvalidArgumentException;
 use Closure;
+use CurlMultiHandle;
+use InvalidArgumentException;
 
 /**
  * @license GNU GPL v2+
@@ -13,10 +14,7 @@ use Closure;
  */
 class MultiCurlRequest implements HttpRequest {
 
-	/**
-	 * @var resource
-	 */
-	private $handle;
+	private CurlMultiHandle $handle;
 
 	/**
 	 * @var array
@@ -35,13 +33,11 @@ class MultiCurlRequest implements HttpRequest {
 
 	/**
 	 * @since 1.0
-	 *
-	 * @param resource $handle
 	 */
-	public function __construct( $handle ) {
+	public function __construct( CurlMultiHandle|false $handle ) {
 
-		if ( get_resource_type( $handle ) !== 'curl_multi' ) {
-			throw new InvalidArgumentException( "Expected a cURL multi resource type" );
+		if ( $handle === false ) {
+			throw new InvalidArgumentException( "Expected a cURL resource type" );
 		}
 
 		$this->handle = $handle;
